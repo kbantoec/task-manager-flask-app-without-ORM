@@ -1,11 +1,22 @@
 from flask import Flask, render_template, request, redirect
 from datetime import datetime
 import sys
-import sqlite3
 import os
 
 app = Flask(__name__)
+
+# Load the config variables to our app
 app.config.from_object('config')
+# app.config['DATABASE_URI'] => C:\Users\YBant\Documents\projects\flaskapp_taskmanager_without_orm\app.db
+
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    return render_template('index.html')
+
+
+# Start connection with the database
+# db: sqlite3.Connection = sqlite3.connect(app.config['DATABASE_URI'])
 # db = SQLAlchemy(app)
 #
 #
@@ -64,4 +75,4 @@ app.config.from_object('config')
 #             print(f"There was a problem updating your task. Error: {e}.", file=sys.stderr)
 #     else:
 #         return render_template('update.html', task=task)
-
+   
