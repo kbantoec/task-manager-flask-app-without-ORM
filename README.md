@@ -26,5 +26,9 @@ With Python to populate the database (typing `python` in the terminal at the roo
 >>> import sqlite3
 >>> cur = sqlite3.Cursor(db)
 >>> print(cur.fetchall())
+>>> cur.execute("INSERT INTO todo VALUES (?, ?, ?);", (1, 'Hello World', 'avba'))
+>>> cur.execute("SELECT * FROM todo").fetchall()
+[(1, 'Hello World', 'avba')]
+>>> exit()
 ```
 
