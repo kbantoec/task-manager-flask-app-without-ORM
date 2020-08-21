@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from datetime import datetime
+from . import utils
 import sys
 import os
 import sqlite3
@@ -43,7 +44,7 @@ def index():
     else:
         # List of tuples
         tasks_result: list = cursor.execute("SELECT * FROM `todo`;").fetchall()
-        tasks: list = [Todo(content=tup[1], id_=tup[0], date_created=tup[2]) for tup in tasks_result]
+        tasks: list = [Todo(content=tup[1], id=tup[0], date_created=tup[2]) for tup in tasks_result]
         conn.close()
         return render_template('index.html', tasks=tasks)
 
@@ -64,20 +65,31 @@ def delete(identifier):
         return redirect('/')
     except Exception as e:
         print(f"There was a problem deleting your task. Error: {e}.", file=sys.stderr)
-#
-#
-# @app.route('/update/<int:identifier>', methods=['GET', 'POST'])
-# def update(identifier):
-#     task = Todo.query.get_or_404(identifier)
-#
-#     if request.method == 'POST':
-#         task.content = request.form['content']
-#
-#         try:
-#             db.session.commit()
-#             return redirect('/')
-#         except Exception as e:
-#             print(f"There was a problem updating your task. Error: {e}.", file=sys.stderr)
-#     else:
-#         return render_template('update.html', task=task)
+
+
+@app.route('/update/<int:identifier>', methods=['GET', 'POST'])
+def update(identifier):
+    # Start connection with the database (also creates the file if it does not yet exist)
+    conn: sqlite3.Connection = sqlite3.connect(app.config['DATABASE_URI'])
+    conn.row_factory = utils.dict_factory
+
+    # Create a cursor to interact with the database
+    cursor: sqlite3.Cursor = conn.cursor()
+    
+    res: dict = cursor.execute("SELECT * FROM `todo` WHERE id = (?);", (2, )).fetchone()
+    task: Todo = Todo(**res)
+
+    if request.method == 'POST':
+        task_content = request.form['content']        
+        try:
+            cursor.execute("UPDATE `todo` SET content = (?) WHERE id = (?);", (task_content, identifier))
+            conn.commit()
+            conn.close()
+            return redirect('/')
+        except Exception as e:
+            conn.close()
+            print(f"There was a problem updating your task. Error: {e}.", file=sys.stderr)
+    else:
+        conn.close()
+        return render_template('update.html', task=task)
    
