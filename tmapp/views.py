@@ -10,10 +10,6 @@ app = Flask(__name__)
 # Load the config variables to our app
 app.config.from_object('config')
 from .models import Todo
-# app.config['DATABASE_URI'] => C:\Users\YBant\Documents\projects\flaskapp_taskmanager_without_orm\app.db
-
-# The way we want to represent our data
-# conn.row_factory = dict_factory
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -51,8 +47,6 @@ def index():
 
 @app.route('/delete/<int:identifier>')
 def delete(identifier):
-    # task_to_delete = cursor.execute("DELETE FROM `todo` WHERE id = (?);", (identifier, ))
-
     try:
         # Start connection with the database (also creates the file if it does not yet exist)
         conn: sqlite3.Connection = sqlite3.connect(app.config['DATABASE_URI'])
