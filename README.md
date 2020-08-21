@@ -1,34 +1,10 @@
-# Task Manager App (without ORM)
+# Task Manager App without ORM
 
-Task Manager App without the `SQLAlchemy` Module.
+Task Manager App without the `SQLAlchemy` ORM.
 
-* `tmapp` stands for **t**ask **m**anager **app**
+This is the same project as posted in my [task-manager-flask-app repo](https://github.com/kbantoec/task-manager-flask-app). However, this project involves bypassing the SQLAlchemy ORM whilst interacting with the database utilizing the `sqlite3` module.
 
-Workflow:
+This project involves basic knowledge of the SQL language, the Flask micro-framework, Python, and basic HTML and CSS.
 
-```powershell
-git init
-mkdir tmapp
-pip list
-pip install flask
-touch README.md, .gitignore, app.db
-cd .\tmapp\
-mkdir templates, static, tests
-touch __init__.py, views.py, models.py
-cd ..
-touch .\tmapp\templates\index.html, touch .\tmapp\templates\update.html, touch .\tmapp\templates\base.html
-```
-
-With Python to populate the database (typing `python` in the terminal at the root of the project):
-
-```python
->>> from tmapp.models import db
->>> import sqlite3
->>> cur = sqlite3.Cursor(db)
->>> print(cur.fetchall())
->>> cur.execute("INSERT INTO todo VALUES (?, ?, ?);", (1, 'Hello World', 'avba'))
->>> cur.execute("SELECT * FROM `todo`").fetchall()
-[(1, 'Hello World', 'avba')]
->>> exit()
-```
+Moreover, you should not be tracking the `config.py` file with the version controller.
 
